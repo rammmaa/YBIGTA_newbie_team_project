@@ -5,7 +5,8 @@ from review_analysis.crawling.example_crawler import ExampleCrawler
 
 # 모든 크롤링 클래스를 예시 형식으로 적어주세요. 
 CRAWLER_CLASSES: Dict[str, Type[BaseCrawler]] = {
-    "example": ExampleCrawler,
+    "CatchTable": CatchTableCrawler,
+    "GoogleMaps": oogleMapsCrawler
 }
 
 def create_parser() -> ArgumentParser:
