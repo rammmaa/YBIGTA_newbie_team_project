@@ -55,22 +55,29 @@ class KakaoCrawler(BaseCrawler):
         self.driver.get(self.base_url)
         time.sleep(5)
 
-        # iframe 전환 (카카오맵 리뷰 영역은 iframe 안에 있음)
-        try:
-            self.driver.switch_to.frame("entryIframe")
-        except Exception:
-            print("[ERROR] iframe 전환 실패")
-            self.driver.quit()
-            return
+    # iframe 전환 (현재는 필요 없음 → 필요시 주석 해제)
+    # try:
+    #     iframe = WebDriverWait(self.driver, 10).until(
+    #         EC.presence_of_element_located((By.CSS_SELECTOR, "iframe"))
+    #     )
+    #     self.driver.switch_to.frame("iframe")
+    #     print("[INFO] iframe 전환 성공")
+    # except Exception:
+    #     print("[ERROR] iframe 전환 실패")
+    #     self.driver.quit()
+    #     return
 
-        # 스크롤 다운 반복
+    # 페이지 전체 스크롤 다운
         for _ in range(2):
             self.scroll_down()
 
-        # 더보기 버튼 눌러서 리뷰 더 불러오기
+        # 리뷰 "더보기" 버튼 모두 클릭
         self.more_review()
 
-        # 리뷰 수집
+        # 리뷰 수집 시작
+        print("[INFO] 리뷰 수집 시작")
+
+        self.reviews = []  # 리스트 이름 오타 수정: self.review → self.reviews
         empty_rounds = 0
         max_attempts = 3
 
@@ -104,10 +111,11 @@ class KakaoCrawler(BaseCrawler):
                 except Exception as e:
                     continue
 
-            break  # 현재는 1페이지만, 필요 시 루프 구조 변경 가능
+            break  # 현재는 첫 페이지만 사용 → 여러 페이지 수집 시 루프 구조 확장 필요
 
         self.driver.quit()
         print("[INFO] 브라우저 종료 및 크롤링 완료")
+
 
     def save_to_database(self):
         os.makedirs(self.output_dir, exist_ok=True)
