@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from review_analysis.crawling.base_crawler import BaseCrawler
+from selenium.common.exceptions import NoSuchElementException
 
 class KakaoCrawler(BaseCrawler):
     def __init__(self, output_dir: str):
@@ -40,49 +41,47 @@ class KakaoCrawler(BaseCrawler):
 
     def more_review(self):
         while True:
-            more_buttons = self.driver.find_elements(By.CSS_SELECTOR, "span.btn_more_review")
+            more_buttons = self.driver.find_elements(By.CSS_SELECTOR, "span.btn_more")
             if not more_buttons:
                 break
+
+            clicked = False
             for button in more_buttons:
                 try:
-                    self.driver.execute_script("arguments[0].click();", button)
-                    time.sleep(0.5)
+                    if button.text.strip() == "더보기":
+                        self.driver.execute_script("arguments[0].click();", button)
+                        time.sleep(0.5)
+                        clicked = True
                 except Exception:
                     continue
 
+            if not clicked:
+                # 더이상 "더보기" 버튼이 없으면 중단
+                break
     def scrape_reviews(self):
         self.start_browser()
         self.driver.get(self.base_url)
         time.sleep(5)
 
-    # iframe 전환 (현재는 필요 없음 → 필요시 주석 해제)
-    # try:
-    #     iframe = WebDriverWait(self.driver, 10).until(
-    #         EC.presence_of_element_located((By.CSS_SELECTOR, "iframe"))
-    #     )
-    #     self.driver.switch_to.frame("iframe")
-    #     print("[INFO] iframe 전환 성공")
-    # except Exception:
-    #     print("[ERROR] iframe 전환 실패")
-    #     self.driver.quit()
-    #     return
-
     # 페이지 전체 스크롤 다운
-        for _ in range(2):
-            self.scroll_down()
+        # for _ in range(2):
+        #     self.scroll_down()
 
         # 리뷰 "더보기" 버튼 모두 클릭
-        self.more_review()
+        # self.more_review()
 
         # 리뷰 수집 시작
         print("[INFO] 리뷰 수집 시작")
 
-        self.reviews = []  # 리스트 이름 오타 수정: self.review → self.reviews
+        self.reviews = []
         empty_rounds = 0
         max_attempts = 3
 
-        while len(self.reviews) < 500:
-            comments = self.driver.find_elements(By.CSS_SELECTOR, 'ul.list_evaluation > li')
+        while len(self.reviews) < 5:
+            comments = self.driver.find_elements(By.CSS_SELECTOR, "div.group_review > ul > li")
+
+            print("self.reviews==",len(self.reviews))
+            print("총 리뷰 수는 아마도?", len(comments), "개입니다.")
             print(f"[INFO] 수집된 리뷰 수: {len(self.reviews)} / 현재 페이지 리뷰 {len(comments)}")
 
             if not comments:
@@ -93,11 +92,27 @@ class KakaoCrawler(BaseCrawler):
                 time.sleep(1)
                 continue
 
+#mainContent > div.main_detail > div.detail_cont > div.section_comm.section_review > div.group_review > ul > li:nth-child(1) > div > div.area_review > div > div.review_detail > div > span.starred_grade > span:nth-child(2)
+#mainContent > div.main_detail > div.detail_cont > div.section_comm.section_review > div.group_review > ul > li:nth-child(1) > div > div.area_review > div > div.review_detail > div > span.txt_date
+
             for comment in comments:
                 try:
-                    rate = comment.find_element(By.CSS_SELECTOR, "span.star_rank > span").text.strip()
-                    date = comment.find_element(By.CSS_SELECTOR, "span.txt_date").text.strip()
-                    content = comment.find_element(By.CSS_SELECTOR, "p.desc_review").text.strip()
+                    # rate_el = comment.find_element(By.CSS_SELECTOR, "span.starred_grade > span.screen_out")
+                    # print("[DEBUG] rate element raw text:", rate_el.text)
+                    # rate = rate_el.text.strip()
+                    date = comment.find_element(By.CSS_SELECTOR, "div.info_grade > span.txt_date").text.strip()
+                    
+                    rate_els = comment.find_elements(By.CSS_SELECTOR, "span.starred_grade > span.screen_out")
+                    print("수집된 rate 정보는",rate_els)
+                    if len(rate_els) >=2:
+                        rate = rate_els[1].text.strip()
+                    
+                    try:
+                        content = comment.find_element(By.CSS_SELECTOR, "div.wrap_review > a > p").text.strip()
+                    except NoSuchElementException:
+                        content = " " 
+                    
+                    print("rate=",rate,", date=",date,", content=" , content)
 
                     self.reviews.append({
                         "rate": rate,
@@ -105,13 +120,15 @@ class KakaoCrawler(BaseCrawler):
                         "content": content
                     })
 
-                    if len(self.reviews) >= 500:
+                    if len(self.reviews) >= 5:
+                        print("len(self.reviews) >= 5")
                         break
 
                 except Exception as e:
+                    print("Exception이 발생했습니다", e)
                     continue
 
-            break  # 현재는 첫 페이지만 사용 → 여러 페이지 수집 시 루프 구조 확장 필요
+           # break  # 현재는 첫 페이지만 사용 → 여러 페이지 수집 시 루프 구조 확장 필요
 
         self.driver.quit()
         print("[INFO] 브라우저 종료 및 크롤링 완료")
