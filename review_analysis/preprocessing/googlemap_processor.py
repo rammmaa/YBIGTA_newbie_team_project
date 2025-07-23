@@ -35,7 +35,7 @@ class GooglemapProcessor(BaseDataProcessor):
         df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
         df = df[df["rating"].between(1, 5)]
 
-        # 날짜 형식 변환 (Google Maps는 YYYY-MM-DD일 가능성 높음)
+        # 날짜 형식 변환
         df["date"] = pd.to_datetime(df["date"], errors="coerce")
         df = df.dropna(subset=["date"])
 
@@ -75,7 +75,7 @@ class GooglemapProcessor(BaseDataProcessor):
 
         self.df["vector"] = self.df["tokens"].apply(vector_to_string)
 
-        # 날짜 → 요일 파생변수 (0=월요일, 6=일요일)
+        # 요일 파생변수 (0=월요일, 6=일요일)
         self.df["weekday"] = self.df["date"].dt.weekday
 
     def save_to_database(self):

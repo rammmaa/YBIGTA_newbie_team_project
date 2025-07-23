@@ -32,7 +32,7 @@ class CatchtableProcessor(BaseDataProcessor):
         df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
         df = df[df["rating"].between(1, 5)]
 
-        # 날짜 형식 변환 (yyyy.mm.dd → datetime)
+        # 날짜 형식 변환
         df["date"] = pd.to_datetime(df["date"], format="%Y.%m.%d", errors="coerce")
         df = df.dropna(subset=["date"])
 
@@ -45,7 +45,7 @@ class CatchtableProcessor(BaseDataProcessor):
         today = pd.Timestamp.today()
         df = df[(df["date"] >= "2015-01-01") & (df["date"] <= today)]
 
-        # 텍스트 정제 (특수문자 제거 등)
+        # 텍스트 정제
         df["clean_text"] = df["content"].apply(self._clean_text)
 
         self.df = df.reset_index(drop=True)
@@ -71,7 +71,7 @@ class CatchtableProcessor(BaseDataProcessor):
 
         self.df["vector"] = self.df["tokens"].apply(vector_to_string)
 
-        # 날짜 → 요일 파생변수 (0=월요일, 6=일요일)
+        # 요일 파생변수 (0=월요일, 6=일요일)
         self.df["weekday"] = self.df["date"].dt.weekday
 
     def save_to_database(self):
