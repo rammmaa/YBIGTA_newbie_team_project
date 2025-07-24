@@ -2,10 +2,10 @@ import os
 import glob
 from argparse import ArgumentParser
 from typing import Dict, Type
-from review_analysis.preprocessing.base_processor import BaseDataProcessor
-from review_analysis.preprocessing.catchtable_processor import CatchtableProcessor 
-from review_analysis.preprocessing.googlemap_processor import GooglemapProcessor
-from review_analysis.preprocessing.kakaomap_processor import KakaoMapProcessor
+from base_processor import BaseDataProcessor
+from catchtable_processor import CatchtableProcessor 
+from googlemap_processor import GooglemapProcessor
+from kakaomap_processor import KakaoMapProcessor
 
 
 # 모든 preprocessing 클래스를 예시 형식으로 적어주세요. 
