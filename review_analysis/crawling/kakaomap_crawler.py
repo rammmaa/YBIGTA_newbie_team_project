@@ -89,7 +89,7 @@ class KakaoCrawler(BaseCrawler):
             comments = self.driver.find_elements(By.CSS_SELECTOR, "div.group_review > ul > li")
 
             print("self.reviews==",len(self.reviews))
-            print("총 리뷰 수는 아마도?", len(comments), "개입니다.")
+            print("총 리뷰 수는", len(comments), "개입니다.")
             print(f"[INFO] 수집된 리뷰 수: {len(self.reviews)} / 현재 페이지 리뷰 {len(comments)}")
 
             if not comments:
