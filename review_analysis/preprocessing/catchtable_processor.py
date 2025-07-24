@@ -1,12 +1,12 @@
 import os
 import re
-import pandas as pd # type: ignore
-import numpy as np # type: ignore
-from gensim.models import Word2Vec # type: ignore
-from nltk.tokenize import word_tokenize # type: ignore
-from nltk.corpus import stopwords # type: ignore
-import nltk # type: ignore
-from review_analysis.preprocessing.base_processor import BaseDataProcessor
+import pandas as pd
+import numpy as np
+from gensim.models import Word2Vec
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import nltk
+from base_processor import BaseDataProcessor
 
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -17,20 +17,11 @@ class CatchtableProcessor(BaseDataProcessor):
     Catchtable 리뷰 데이터를 전처리 및 특징 추출하는 클래스
     """
     def __init__(self, input_path: str, output_path: str):
-        """
-        CatchtableProcessor 생성자.
-        Args:
-            input_path (str): 입력 CSV 파일 경로
-            output_path (str): 출력 디렉토리 경로
-        """
         super().__init__(input_path, output_path)
         self.df = None
         self.embeddings = None
 
     def preprocess(self):
-        """
-        CSV 파일을 불러와서 전처리합니다.
-        """
         # CSV 파일 불러오기
         df = pd.read_csv(self.input_path)
 
@@ -84,9 +75,6 @@ class CatchtableProcessor(BaseDataProcessor):
         self.df["weekday"] = self.df["date"].dt.weekday
 
     def save_to_database(self):
-        """
-        self.df를 CSV 파일로 저장.
-        """
         result = self.df[["rating", "content", "date", "weekday", "vector"]]
         save_path = os.path.join(self.output_dir, "preprocessed_reviews_catchtable.csv")
         result.to_csv(save_path, index=False)
