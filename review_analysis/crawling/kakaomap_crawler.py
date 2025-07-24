@@ -16,7 +16,7 @@ class KakaoCrawler(BaseCrawler):
     def __init__(self, output_dir: str):
         super().__init__(output_dir)
         self.base_url = "https://map.kakao.com/place/1890778114#comment"
-        self.reviews = []
+        self.reviews : list[str] = []
         self.driver = None
 
     def start_browser(self):
