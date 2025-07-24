@@ -131,8 +131,7 @@ YBIGTA_newbie_team_project/review_analysis/eda/visualization에서 .py 확인 �
 
 5. weekly_review_count_by_platform.py
  
-
-![이미지1](https://i.imgur.com/niDtCoG.jpg)
 ![이미지2](https://i.imgur.com/FB4KpiX.jpg)
+![이미지1](https://i.imgur.com/niDtCoG.jpg)
 ![이미지3](https://imgur.com/LsOR612.jpg)
 
