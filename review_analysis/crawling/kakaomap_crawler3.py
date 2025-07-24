@@ -102,10 +102,21 @@ class KakaoCrawler(BaseCrawler):
                     # rate = rate_el.text.strip()
                     date = comment.find_element(By.CSS_SELECTOR, "div.info_grade > span.txt_date").text.strip()
                     
-                    rate_els = comment.find_elements(By.CSS_SELECTOR, "span.starred_grade > span.screen_out")
-                    print("수집된 rate 정보는",rate_els)
-                    if len(rate_els) >=2:
-                        rate = rate_els[1].text.strip()
+                    elems = comment.find_elements(By.CSS_SELECTOR, "span.starred_grade > span.screen_out")
+                    print([e.text for e in elems])
+
+                    screen_out_spans = comment.find_elements(By.CSS_SELECTOR, "span.starred_grade > span.screen_out")
+                    print(screen_out_spans)
+
+                    rate = ''
+                    
+                    # rate_el = comment.find_element(By.CSS_SELECTOR, "span.starred_grade > span.screen_out:nth-child(2)")
+                    # rate = rate_el.text.strip()
+                    
+                    #rate_els = comment.find_elements(By.CSS_SELECTOR, "#mainContent div.group_review ul > li:nth-child(2) > div")
+                    # print("수집된 rate 정보는",rate)
+                    # if len(rate_els) >=2:
+                    #     rate = rate_els[1].text.strip()
                     
                     try:
                         content = comment.find_element(By.CSS_SELECTOR, "div.wrap_review > a > p").text.strip()
