@@ -140,7 +140,8 @@ database/
 ![이미지](review_analysis/plots/1.png)
 ![이미지](review_analysis/plots/2.png)
 ![이미지](review_analysis/plots/3.png)
-![이미지](review_analysis/plots/4.png)
+![이미지](review_analysis/plots/4-1.png)
+![이미지](review_analysis/plots/4-2.png)
 ![이미지](review_analysis/plots/5.png)
 
 
