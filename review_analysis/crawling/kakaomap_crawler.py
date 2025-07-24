@@ -43,6 +43,13 @@ class KakaoCrawler(BaseCrawler):
     def more_review(self):
         while True:
             more_buttons = self.driver.find_elements(By.CSS_SELECTOR, "span.btn_more")
+            if more_buttons:
+            # 강제 클릭
+                self.driver.execute_script("arguments[0].click();", more_buttons[0])
+                time.sleep(1)  # 클릭 후 약간 기다리기
+            else:
+                print("'더보기' 버튼이 없습니다.")
+
             if not more_buttons:
                 break
 
@@ -65,6 +72,11 @@ class KakaoCrawler(BaseCrawler):
         time.sleep(5)
 
     # 페이지 전체 스크롤 다운
+        for _ in range(2):
+            self.scroll_down()
+
+        # 리뷰 "더보기" 버튼 모두 클릭
+        self.more_review()
         # for _ in range(2):
         #     self.scroll_down()
 
@@ -78,11 +90,11 @@ class KakaoCrawler(BaseCrawler):
         empty_rounds = 0
         max_attempts = 3
 
-        while len(self.reviews) < 5:
+        while len(self.reviews) < 500:
             comments = self.driver.find_elements(By.CSS_SELECTOR, "div.group_review > ul > li")
 
             print("self.reviews==",len(self.reviews))
-            print("총 리뷰 수는 아마도?", len(comments), "개입니다.")
+            print("총 리뷰 수는", len(comments), "개입니다.")
             print(f"[INFO] 수집된 리뷰 수: {len(self.reviews)} / 현재 페이지 리뷰 {len(comments)}")
 
             if not comments:
@@ -92,9 +104,6 @@ class KakaoCrawler(BaseCrawler):
                     break
                 time.sleep(1)
                 continue
-
-#mainContent > div.main_detail > div.detail_cont > div.section_comm.section_review > div.group_review > ul > li:nth-child(1) > div > div.area_review > div > div.review_detail > div > span.starred_grade > span:nth-child(2)
-#mainContent > div.main_detail > div.detail_cont > div.section_comm.section_review > div.group_review > ul > li:nth-child(1) > div > div.area_review > div > div.review_detail > div > span.txt_date
 
             for comment in comments:
                 try:
@@ -117,21 +126,19 @@ class KakaoCrawler(BaseCrawler):
                     except NoSuchElementException:
                         content = ""
 
-                    print("rate=", rate, ", date=", date, ", content=", content)
-
                     self.reviews.append({
                         "rate": rate,
                         "date": date,
                         "content": content
                     })
 
-                    if len(self.reviews) >= 5:
+                    if len(self.reviews) >= 500:
                         break
 
                 except Exception as e:
                     print("[ERROR] 리뷰 파싱 실패:", e)
                     continue
-           # break  # 현재는 첫 페이지만 사용 → 여러 페이지 수집 시 루프 구조 확장 필요
+           break  # 현재는 첫 페이지만 사용 → 여러 페이지 수집 시 루프 구조 확장 필요
 
         self.driver.quit()
         print("[INFO] 브라우저 종료 및 크롤링 완료")

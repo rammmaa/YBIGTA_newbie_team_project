@@ -5,7 +5,6 @@ from review_analysis.crawling.kakaomap_crawler import KakaoCrawler
 from review_analysis.crawling.catchtable_crawler import CatchTableCrawler
 from review_analysis.crawling.googlemaps_crawler import GooglemapsCrawler
 
-
 # 모든 크롤링 클래스를 예시 형식으로 적어주세요. 
 CRAWLER_CLASSES: Dict[str, Type[BaseCrawler]] = {
     "kakao": KakaoCrawler,
