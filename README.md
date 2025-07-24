@@ -2,7 +2,6 @@
 ### 팀 소개
 
 짱짱팀입니당~^^
-(할말있으시면 쓰셔도 됨)
 
 ## 이하람
 
@@ -85,8 +84,6 @@ python review_analysis/crawling/main.py -o database --site {사이트이름}
 database/reviews_{사이트이름}.csv
 ```
 
-예: `reviews_kakao.csv`, `reviews_naver.csv` 등
-
 ---
 
 ## EDA/FE
@@ -114,7 +111,11 @@ python review_analysis/preprocessing/main.py --output_dir database --all
 4. 프로그램 실행 시 아래 디렉토리에 파일 저장
 
 database/
+
+
 ├── preprocessed_reviews_{사이트이름1}.csv
+
+
 ├── preprocessed_reviews_{사이트이름2}.csv
 ...
 
