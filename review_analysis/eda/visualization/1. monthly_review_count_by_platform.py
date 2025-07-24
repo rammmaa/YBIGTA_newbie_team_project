@@ -14,6 +14,12 @@ files = [
     ("./preprocessed_reviews_kakaomap.csv", "Kakaomap")
 ]
 
+custom_palette = {
+    "Catchtable": "#FFA500",  # 주황
+    "Kakaomap": "#FFD700",    # 노랑
+    "Googlemap": "#1E90FF"    # 파랑
+}
+
 dfs = []
 for filepath, platform in files:
     temp_df = pd.read_csv(filepath, parse_dates=['date'])
@@ -27,8 +33,13 @@ monthly_counts = df.groupby(['year_month', 'platform']).size().reset_index(name=
 monthly_counts = monthly_counts.sort_values('year_month')
 
 plt.figure(figsize=(14,7))
-sns.barplot(data=monthly_counts, x='year_month', y='review_count', hue='platform')
-
+sns.barplot(
+    data=monthly_counts,
+    x='year_month',
+    y='review_count',
+    hue='platform',
+    palette=custom_palette
+)
 plt.xticks(rotation=45)
 
 ax = plt.gca()
@@ -49,3 +60,5 @@ plt.ylabel('리뷰 개수')
 plt.legend(title='플랫폼')
 plt.tight_layout()
 plt.show()
+
+

@@ -14,6 +14,13 @@ files = [
     ("./preprocessed_reviews_kakaomap.csv", "Kakaomap")
 ]
 
+# 색상 딕셔너리
+custom_palette = {
+    "Catchtable": "#FFA500",  # 주황
+    "Kakaomap": "#FFD700",    # 노랑
+    "Googlemap": "#1E90FF"    # 파랑
+}
+
 dfs = []
 for filepath, platform in files:
     temp_df = pd.read_csv(filepath, parse_dates=['date'])
@@ -29,7 +36,14 @@ df['year_month'] = df['date'].dt.to_period('M').dt.to_timestamp()
 monthly_avg_rating = df.groupby(['year_month', 'platform'])['rating'].mean().reset_index()
 
 plt.figure(figsize=(14,7))
-sns.lineplot(data=monthly_avg_rating, x='year_month', y='rating', hue='platform', marker='o')
+sns.lineplot(
+    data=monthly_avg_rating,
+    x='year_month',
+    y='rating',
+    hue='platform',
+    marker='o',
+    palette=custom_palette
+)
 
 plt.xticks(rotation=45)
 plt.title('플랫폼별 월별 평균 별점 추이')

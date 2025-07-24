@@ -8,6 +8,13 @@ font_path = "/System/Library/Fonts/Supplemental/AppleGothic.ttf"
 font_name = font_manager.FontProperties(fname=font_path).get_name()
 rc('font', family=font_name)
 
+# 색상 매핑 딕셔너리
+custom_palette = {
+    "Catchtable": "#FFA500",  # 주황
+    "Kakaomap": "#FFD700",    # 노랑
+    "Googlemap": "#1E90FF"    # 파랑
+}
+
 files = [
     ("./preprocessed_reviews_catchtable.csv", "Catchtable"),
     ("./preprocessed_reviews_googlemap.csv", "Googlemap"),
@@ -22,8 +29,9 @@ for filepath, platform in files:
 
 df = pd.concat(dfs, ignore_index=True)
 
+# 박스플롯
 plt.figure(figsize=(10,6))
-sns.boxplot(data=df, x='platform', y='rating', palette="Set2")
+sns.boxplot(data=df, x='platform', y='rating', palette=custom_palette)
 
 plt.title('플랫폼별 별점 분포')
 plt.xlabel('플랫폼')
