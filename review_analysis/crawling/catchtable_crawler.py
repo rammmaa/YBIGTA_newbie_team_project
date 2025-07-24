@@ -1,4 +1,4 @@
-from base_crawler import BaseCrawler
+from review_analysis.crawling.base_crawler import BaseCrawler
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -9,13 +9,24 @@ import time
 import csv
 
 class CatchTableCrawler(BaseCrawler):
+    """
+        CatchTable 리뷰를 크롤링하는 Crawler 클래스.
+    """
     def __init__(self, output_dir: str):
+        """
+        output_dir는 무시하고 항상 output 폴더에 저장.
+        Args:
+            output_dir (str): 출력 디렉토리 경로
+        """
         super().__init__(output_dir)
         self.base_url = 'https://app.catchtable.co.kr/ct/shop/yeondon_/review'
         self.driver = None
         self.reviews : list[dict[str, str]] = []
         
     def start_browser(self):
+        """
+        크롬 브라우저를 실행하고 CatchTable 리뷰 페이지로 이동다.
+        """
         options = Options()
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
@@ -23,6 +34,9 @@ class CatchTableCrawler(BaseCrawler):
         return driver
     
     def scrape_reviews(self):
+        """
+        CatchTable 리뷰를 크롤링하여 self.reviews에 저장.
+        """
         driver = self.start_browser()
         driver.get(self.base_url)
         time.sleep(5)
@@ -54,6 +68,9 @@ class CatchTableCrawler(BaseCrawler):
         driver.quit()
     
     def save_to_database(self):
+        """
+        self.reviews를 CSV 파일로 저장.
+        """
         os.makedirs(self.output_dir, exist_ok=True)
         output_path = os.path.join(self.output_dir, "reviews_catchtable.csv")
 
