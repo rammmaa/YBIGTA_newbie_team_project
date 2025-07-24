@@ -135,6 +135,29 @@ database/
 ├── preprocessed_reviews_{사이트이름2}.csv
 ...
 
+1) 결측치 및 이상치 처리
+rating, content, date 컬럼에 결측치가 있는 행 제거
+
+rating은 숫자로 변환 후 1~5 사이 값만 유지
+
+date는 파싱 실패한 값 제거 및 2015년 이전·미래 날짜 제외
+
+content 길이가 3자 미만 또는 1800자 초과인 경우 제거
+
+2) 텍스트 전처리 및 파생변수 생성
+content에서 특수문자 제거, 공백 정리, 소문자 변환하여 clean_text 생성
+
+clean_text에 대해 word_tokenize 수행 후 불용어 제거하여 tokens 생성
+
+date를 기반으로 요일 정보(weekday: 0~6) 추출하여 파생변수 생성
+
+3) 텍스트 벡터화
+tokens 컬럼을 활용해 Word2Vec 임베딩 모델 학습 (vector_size=50)
+
+각 리뷰의 단어 벡터 평균을 계산해 고정 길이 벡터(vector) 생성
+
+최종적으로 rating, content, date, weekday, vector 컬럼으로 구성된 CSV 저장
+
 5. 시각화: review_analysis/plots 디렉토리에 이미지 저장되어 있음
 
 1)  월별 리뷰 개수 (플랫폼별)
