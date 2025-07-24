@@ -48,7 +48,7 @@ class KakaoCrawler(BaseCrawler):
                 self.driver.execute_script("arguments[0].click();", more_buttons[0])
                 time.sleep(1)  # 클릭 후 약간 기다리기
             else:
-                print("❌ '더보기' 버튼이 없습니다.")
+                print("'더보기' 버튼이 없습니다.")
             
             if not more_buttons:
                 break
