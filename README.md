@@ -137,6 +137,12 @@ database/
 
 5. 시각화: review_analysis/plots 디렉토리에 이미지 저장되어 있음
 
+![이미지](review_analysis/plots/1.png)
+![이미지](review_analysis/plots/2.png)
+![이미지](review_analysis/plots/3.png)
+![이미지](review_analysis/plots/4.png)
+![이미지](review_analysis/plots/5.png)
+
 
 YBIGTA_newbie_team_project/review_analysis/eda/visualization에서 .py 확인 가능
 
