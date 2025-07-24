@@ -33,13 +33,11 @@
 
 ```
 python -m venv venv
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
+venv\Scripts\activate # Windows
+source venv/bin/activate # Mac/Linux
 ````
 
-2. 필요 패키지 설치
+2. 디렉토리로 이동 > 필요 패키지 설치
 
 ```
 pip install -r requirements.txt
@@ -64,6 +62,26 @@ uvicorn app.main:app --reload
 
 ## 크롤링
 
+```
+YBIGTA_newbie_team_project
+├── README.md # 읽어주세요...
+│
+├── database/
+│ ├── reviews_{사이트 이름}.csv
+│ └──
+...
+│
+├── review_analysis/
+│ ├── crawling/
+│ │ ├── base_crawler.py
+│ │ ├── main.py
+│ │ └──
+...
+│ └──
+...
+└──... // 
+```
+
 1. 프로젝트 루트 디렉토리에서 아래 명령어 실행
 
 * 전체 사이트 크롤링 실행
@@ -86,16 +104,14 @@ database/reviews_{사이트이름}.csv
 
 ---
 
-## EDA/FE
+## EDA/FE & 시각화
 
 1. 가상환경(venv) 만들기 및 활성화 
 
 ```
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
+python -m venv venv 
+venv\Scripts\activate # Windows
+source venv/bin/activate # Mac/Linux
 ````
 
 2. 필요 패키지 설치
