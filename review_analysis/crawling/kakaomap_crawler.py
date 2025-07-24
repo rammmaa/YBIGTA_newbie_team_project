@@ -1,6 +1,7 @@
 import os
 import time
 import csv
+import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -97,22 +98,26 @@ class KakaoCrawler(BaseCrawler):
 
             for comment in comments:
                 try:
-                    # rate_el = comment.find_element(By.CSS_SELECTOR, "span.starred_grade > span.screen_out")
-                    # print("[DEBUG] rate element raw text:", rate_el.text)
-                    # rate = rate_el.text.strip()
                     date = comment.find_element(By.CSS_SELECTOR, "div.info_grade > span.txt_date").text.strip()
-                    
-                    rate_els = comment.find_elements(By.CSS_SELECTOR, "span.starred_grade > span.screen_out")
-                    print("수집된 rate 정보는",rate_els)
-                    if len(rate_els) >=2:
-                        rate = rate_els[1].text.strip()
-                    
+
+                    try:
+                        rate = ""
+                        span_els = comment.find_elements(By.CSS_SELECTOR, "span.screen_out")
+                        for span in span_els:
+                            text = span.get_attribute("innerText").strip()  # get_attribute로 추출
+                            if re.fullmatch(r"\d+(\.\d+)?", text):  # 정수 또는 소수 체크 (예: 4, 4.0)
+                                rate = text
+                                break
+                    except Exception as e:
+                        print("[WARN] rate 추출 실패:", e)
+                        rate = ""
+
                     try:
                         content = comment.find_element(By.CSS_SELECTOR, "div.wrap_review > a > p").text.strip()
                     except NoSuchElementException:
-                        content = " " 
-                    
-                    print("rate=",rate,", date=",date,", content=" , content)
+                        content = ""
+
+                    print("rate=", rate, ", date=", date, ", content=", content)
 
                     self.reviews.append({
                         "rate": rate,
@@ -121,13 +126,11 @@ class KakaoCrawler(BaseCrawler):
                     })
 
                     if len(self.reviews) >= 5:
-                        print("len(self.reviews) >= 5")
                         break
 
                 except Exception as e:
-                    print("Exception이 발생했습니다", e)
+                    print("[ERROR] 리뷰 파싱 실패:", e)
                     continue
-
            # break  # 현재는 첫 페이지만 사용 → 여러 페이지 수집 시 루프 구조 확장 필요
 
         self.driver.quit()

@@ -1,7 +1,9 @@
 # 팀 소개
+
 (멘트..)
 
-# 이하람  
+# 이하람
+
 컴퓨터과학과 24학번
 
 MBTI: ISTJ
@@ -16,7 +18,14 @@ MBTI: ISTJ
 
 # 조재관
 
+컴퓨터과학과 21학번
+
+MBTI: ENTP(INTP)
+
+좋아하는 것: 운동(축구, 약구, 헬스, 러닝 등등), 여행
+
 ### 코드 실행 방법
+
 - Web
 - 크롤링
 
@@ -24,16 +33,17 @@ MBTI: ISTJ
 
 1. 프로젝트 루트 디렉토리에서 아래 명령어를 실행하세요.
 
-###  전체 사이트 크롤링 실행
+### 전체 사이트 크롤링 실행
+
 ```
 python review_analysis/crawling/main.py -o database --all
-````
+```
 
-###  특정 사이트만 실행
+### 특정 사이트만 실행
+
 ```
 python review_analysis/crawling/main.py -o database --site {사이트이름}
 ```
-
 
 2. 크롤링 결과는 아래 위치에 저장됩니다:
 
@@ -42,7 +52,6 @@ database/reviews_{사이트이름}.csv
 ```
 
 > 예: `reviews_kakao.csv`, `reviews_naver.csv` 등
-
 
 - EDA/FE
 
