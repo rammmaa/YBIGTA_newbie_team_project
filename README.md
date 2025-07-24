@@ -154,14 +154,20 @@ database/
     3. 시간(월 단위)에 따른 평균 별점 추이
         시각화하였을 때, 계절성이 있는 것처럼 보이기도 함.
         계속해서 일정한 폭의 변동이 있지만, 점점 낮아지는 추세를 보임. 
-    
+<Figure size 640x480 with 1 Axes><img width="556" height="449" alt="image" src="https://github.com/user-attachments/assets/7a30060f-ba36-4de0-955c-ae957b37bc59" />
+        캐치테이블
+
+<Figure size 640x480 with 1 Axes><img width="556" height="449" alt="image" src="https://github.com/user-attachments/assets/e737980f-1c66-46cd-9608-cd513ea3a96f" />
+        카카오맵
+
+
     4. 사이트별 긍정 리뷰, 부정 리뷰 비율 비교
         별점 2점 이하는 부정, 4-5점은 긍정으로 처리.
         kakao map과 google map을 비교하였을 때, 
         google map에서 긍정 리뷰 비율이 더 높은 것으로 나타남.
     
 
-6. 시각화: review_analysis/plots 디렉토리에 이미지 저장되어 있음
+5. 시각화: review_analysis/plots 디렉토리에 이미지 저장되어 있음
 =======
 1) 결측치 및 이상치 처리
 rating, content, date 컬럼에 결측치가 있는 행 제거
