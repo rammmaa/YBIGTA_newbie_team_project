@@ -49,7 +49,7 @@ class KakaoCrawler(BaseCrawler):
                 time.sleep(1)  # 클릭 후 약간 기다리기
             else:
                 print("'더보기' 버튼이 없습니다.")
-            
+
             if not more_buttons:
                 break
 
@@ -77,6 +77,11 @@ class KakaoCrawler(BaseCrawler):
 
         # 리뷰 "더보기" 버튼 모두 클릭
         self.more_review()
+        # for _ in range(2):
+        #     self.scroll_down()
+
+        # 리뷰 "더보기" 버튼 모두 클릭
+        # self.more_review()
 
         # 리뷰 수집 시작
         print("[INFO] 리뷰 수집 시작")
@@ -127,10 +132,13 @@ class KakaoCrawler(BaseCrawler):
                         "content": content
                     })
 
+                    if len(self.reviews) >= 500:
+                        break
+
                 except Exception as e:
                     print("[ERROR] 리뷰 파싱 실패:", e)
                     continue
-            break  # 현재는 첫 페이지만 사용 → 여러 페이지 수집 시 루프 구조 확장 필요
+           break  # 현재는 첫 페이지만 사용 → 여러 페이지 수집 시 루프 구조 확장 필요
 
         self.driver.quit()
         print("[INFO] 브라우저 종료 및 크롤링 완료")
