@@ -6,7 +6,7 @@ from gensim.models import Word2Vec
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import nltk
-from base_processor import BaseDataProcessor
+from review_analysis.preprocessing.base_processor import BaseDataProcessor
 
 nltk.download('punkt')
 nltk.download('stopwords')
