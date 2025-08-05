@@ -138,7 +138,7 @@ class KakaoCrawler(BaseCrawler):
                 except Exception as e:
                     print("[ERROR] 리뷰 파싱 실패:", e)
                     continue
-           break  # 현재는 첫 페이지만 사용 → 여러 페이지 수집 시 루프 구조 확장 필요
+            break  # 현재는 첫 페이지만 사용 → 여러 페이지 수집 시 루프 구조 확장 필요
 
         self.driver.quit()
         print("[INFO] 브라우저 종료 및 크롤링 완료")
