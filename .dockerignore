@@ -1,0 +1,13 @@
+# 민감정보
+.env
+*.pem
+
+# 캐시/불필요 파일
+__pycache__/
+*.pyc
+*.pyo
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store

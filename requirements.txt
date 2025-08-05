@@ -116,6 +116,8 @@ pyarrow==21.0.0
 pycparser==2.22
 pydantic==2.10.5
 pydantic_core==2.27.2
+pymongo==4.10.1
+pymysql==1.1.1
 Pygments==2.19.2
 pymongo==4.13.2
 PyMySQL==1.1.1
