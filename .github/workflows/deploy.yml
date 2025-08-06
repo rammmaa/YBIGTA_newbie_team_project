@@ -27,7 +27,7 @@ jobs:
         run: docker push seohyun7/my-fastapi-app:latest
 
   deploy-to-ec2:
-    name: Deploy to EC2 DB, Docker, AWS 과제 3
+    name: Deploy to EC2
     needs: build-and-push
     runs-on: ubuntu-latest
 
