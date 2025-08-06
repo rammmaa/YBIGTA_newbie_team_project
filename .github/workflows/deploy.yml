@@ -21,13 +21,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t seohyun7/my-fastapi-app:latest .
+        run: docker build -t rammma/my-fastapi-app .
 
       - name: Push Docker image
-        run: docker push seohyun7/my-fastapi-app:latest
+        run: docker push rammma/my-fastapi-app
 
   deploy-to-ec2:
-    name: Deploy to EC2 DB, Docker, AWS 과제 3
+    name: Deploy to EC2
     needs: build-and-push
     runs-on: ubuntu-latest
 
@@ -39,7 +39,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull seohyun7/my-fastapi-app:latest
+            docker pull rammma/my-fastapi-app
             docker stop summer-25 || true
             docker rm summer-25 || true
-            docker run -d --name summer-25 -p 80:80 seohyun7/my-fastapi-app:latest
+            docker run -d --name summer-25 -p 80:80 rammma/my-fastapi-app
