@@ -119,7 +119,6 @@ pydantic_core==2.27.2
 pymongo==4.10.1
 pymysql==1.1.1
 Pygments==2.19.2
-pymongo==4.13.2
 PyMySQL==1.1.1
 pyparsing==3.2.3
 PySocks==1.7.1
