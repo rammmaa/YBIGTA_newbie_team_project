@@ -277,19 +277,46 @@ YBIGTA_newbie_team_project/review_analysis/eda/visualization에서 .py 확인 �
 docker.io/rammma/my-fastapi-app
 
 ### preprocess(사이트).png
-<img width="583" height="395" alt="preprocess(catchtable)" src="https://github.com/user-attachments/assets/8f2e01f7-9b68-402f-a288-19e8f68dd141" />
+![1](aws/preprocess.png)
+
 <img width="625" height="431" alt="preprocess(googlemap)" src="https://github.com/user-attachments/assets/ebcd4d53-3541-44f4-9919-567bff3d069a" />
 <img width="725" height="499" alt="preprocess(kakaomap)" src="https://github.com/user-attachments/assets/840b2d91-28ab-4524-908d-a8e464c0e052" />
 
 ### login.png
-<img width="828" height="778" alt="login" src="https://github.com/user-attachments/assets/0a37118f-3368-4418-8d42-8397bdac33b6" />
+![1](aws/login.png)
 
 ### register.png
-<img width="793" height="844" alt="register" src="https://github.com/user-attachments/assets/77ede945-c2df-43e1-9fa7-6a8ff6a7ca62" />
+![1](aws/register.png)
 
 ### update_password.png
-<img width="547" height="588" alt="update_password" src="https://github.com/user-attachments/assets/f2335b7e-16b0-4b7e-b439-5a4ee645e9dc" />
+![1](aws/update-password.JPG)
 
+## 1. RDS 보안 설정: 퍼블릭 액세스 차단 & VPC 내부 접속 허용
+
+* AWS RDS 인스턴스는 보안을 위해 퍼블릭 액세스를 허용하지 않고, VPC 내에서만 접속 가능하도록 설정하였다.
+
+
+1) RDS 생성 시 “퍼블릭 액세스” 옵션을 No로 설정
+2) RDS가 속한 VPC 및 서브넷을 확인
+3) 보안 그룹(Security Group)에서 EC2 인스턴스가 속한 서브넷 또는 IP만 인바운드 허용
+    이를 통해 EC2와 RDS 간 안전한 사설 네트워크 통신이 가능하도록 구성
+
+![1](aws/ad1.png)
+![1](aws/ad2.png)
+
+
+## 2. 로드 밸런서를 통한 포트 외부 노출 최소화
+
+EC2 인스턴스는 외부에 직접 포트를 노출하지 않고, AWS Elastic Load Balancer (ELB)를 활용해 트래픽을 분산하였다.
+
+로드 밸런서는 외부 요청을 받아 내부 EC2 인스턴스로 전달하며,
+EC2는 로드 밸런서가 사용하는 포트(예: 80, 443) 외에는 외부 접근을 차단하도록 설정했다.
+
+![1](aws/av1.png)
+![1](aws/av2.png)
+
+
+## 3. 프로젝트를 진행하며 깨달은 점, 마주쳤던 오류를 해결한 경험
 
 ### personal reviews about the project
     팀원에게서 공유받은 .pem 키와 퍼블릭 ip 주소로 ec2 접속을 시도하였으나 실패했다. 3시간 전에는 동일한 정보로 잘 접속이 되었던 상태였기 때문에, 이전에 접속한 시간 이후로 변경된 것이나 접속을 시도한 장소(연결된 인터넷)가 바뀐 것 2개 중 하나가 문제일 것이라고 생각했다. 공공장소에서는 접속을 막았을 수도 있다 하여 집에서 다시 시도하였으나, 동일한 오류로 접속되지 않았다. 
@@ -298,3 +325,17 @@ docker.io/rammma/my-fastapi-app
     $env:USERNAME ; 현재 사용자 이름 보여줌. (e.g.) ybigta)
     icacls .\key.pem /grant:r "$($env:USERNAME):(R)" ; 현재 사용자에게 읽기 권한을 부여.
     icacls .\key.pem /grant:r "ybigta:(R)" ; ybigta 사용자에게 key.pem 키 사용 권한 부여. 
+
+* 프로젝트를 진행하면서 데이터베이스 URL, 비밀번호, API 키 등과 같은 민감한 정보를 안전하게 관리하기 위해 .env 파일을 적극 활용했다.
+  특히 로컬 개발 환경과 배포 환경이 분리되어 있었기 때문에, 각각에 맞는 환경변수를 별도로 관리할 수 있다는 점이 매우 효율적이었고, 이를 통해 코드 내에 민감 정보가 하드코딩 되는 것을 방지할 수 있었다.
+  그러나 처음에는 .env 파일과 환경변수 관리가 생각보다 훨씬 까다롭고 복잡하다는 것을 크게 느꼈다. AWS EC2, RDS, MongoDB Atlas 등 다양한 서비스와 인프라를 연동하면서, 각각의 접속 정보(MONGO_URL, RDS_HOST, RDS_PORT 등)를 .env에 정의하는 것은 비교적 쉽지만, 이를 실제 서버와 컨테이너에 반영하는 과정에서 여러 어려움에 직면했다.
+  
+  가장 먼저 마주친 문제는 .env 파일이 서버에 정상적으로 올라가지 않거나, 혹은 컨테이너 내부에 환경변수가 올바르게 전달되지 않는 점이었다. 초기 Docker 이미지를 빌드하고 배포할 때 .env 파일을 복사하지 않거나, GitHub Actions 등의 CI/CD 자동화 과정에서 환경변수를 제대로 주입하지 않아서 애플리케이션이 데이터베이스에 연결하지 못하는 일이 빈번했다. 이 문제를 해결하기 위해 Dockerfile과 docker-compose, 그리고 CI/CD 워크플로우에서 .env를 안전하고 확실하게 전달하는 방법을 반복적으로 수정하고 테스트하는 과정이 필요했다.
+  
+  또한, AWS RDS 보안 그룹과 VPC 설정과도 밀접한 연관이 있었다. 특히 보안을 위해 RDS 퍼블릭 액세스를 허용하지 않고, VPC 내부 네트워크에서만 접근 가능하도록 설정했기 때문에, .env 파일에 기입한 RDS 호스트 주소가 퍼블릭 도메인 주소가 아닌 VPC 내부 프라이빗 IP 주소여야 했다. 초기에 퍼블릭 도메인 주소를 넣어 연결 오류가 발생했고, 문제 원인을 찾기까지 시간이 걸렸다. 결국 네트워크 구조와 보안 정책을 이해하고 .env 값을 내부 IP로 바꾸면서 문제를 해결할 수 있었다. 뿐만 아니라, URI 내 사용자명이나 비밀번호에 특수문자가 포함된 경우, 반드시 URL 인코딩을 적용해야만 정상적으로 연결된다는 점도 직접 경험하며 깨달았다.
+  
+  이러한 경험을 통해 .env 설정은 단순히 파일 하나를 작성하는 일이 아니라, 서버, 컨테이너, 네트워크, 보안 설정과 연동되어 복합적으로 작동하는 요소임을 몸소 느꼈다.
+  그리고 배포 자동화 과정에서 환경변수를 안전하게 관리하고 주입하는 것은 보안과 안정성 측면에서 필수적인 작업이라는 것도 알게 되었다.
+
+
+
