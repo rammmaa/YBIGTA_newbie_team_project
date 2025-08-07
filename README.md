@@ -291,6 +291,9 @@ docker.io/rammma/my-fastapi-app
 
 ### get_processed.png
 
+### update_password.png
+<img width="547" height="588" alt="update_password" src="https://github.com/user-attachments/assets/f2335b7e-16b0-4b7e-b439-5a4ee645e9dc" />
+
 
 ### personal reviews about the project
     팀원에게서 공유받은 .pem 키와 퍼블릭 ip 주소로 ec2 접속을 시도하였으나 실패했다. 3시간 전에는 동일한 정보로 잘 접속이 되었던 상태였기 때문에, 이전에 접속한 시간 이후로 변경된 것이나 접속을 시도한 장소(연결된 인터넷)가 바뀐 것 2개 중 하나가 문제일 것이라고 생각했다. 공공장소에서는 접속을 막았을 수도 있다 하여 집에서 다시 시도하였으나, 동일한 오류로 접속되지 않았다. 
