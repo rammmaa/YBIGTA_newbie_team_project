@@ -276,17 +276,26 @@ YBIGTA_newbie_team_project/review_analysis/eda/visualization에서 .py 확인 �
 ### docker hub 주소
 docker.io/rammma/my-fastapi-app
 
-## preprocess(사이트).png
+### preprocess(사이트).png
 <img width="583" height="395" alt="preprocess(catchtable)" src="https://github.com/user-attachments/assets/8f2e01f7-9b68-402f-a288-19e8f68dd141" />
 <img width="625" height="431" alt="preprocess(googlemap)" src="https://github.com/user-attachments/assets/ebcd4d53-3541-44f4-9919-567bff3d069a" />
 <img width="725" height="499" alt="preprocess(kakaomap)" src="https://github.com/user-attachments/assets/840b2d91-28ab-4524-908d-a8e464c0e052" />
 
-## login.png
+### login.png
 <img width="828" height="778" alt="login" src="https://github.com/user-attachments/assets/0a37118f-3368-4418-8d42-8397bdac33b6" />
 
-## get_users.png
+### get_users.png
 
-## register.png
+### register.png
 <img width="793" height="844" alt="register" src="https://github.com/user-attachments/assets/77ede945-c2df-43e1-9fa7-6a8ff6a7ca62" />
 
-## get_processed.png
+### get_processed.png
+
+
+### personal reviews about the project
+    팀원에게서 공유받은 .pem 키와 퍼블릭 ip 주소로 ec2 접속을 시도하였으나 실패했다. 3시간 전에는 동일한 정보로 잘 접속이 되었던 상태였기 때문에, 이전에 접속한 시간 이후로 변경된 것이나 접속을 시도한 장소(연결된 인터넷)가 바뀐 것 2개 중 하나가 문제일 것이라고 생각했다. 공공장소에서는 접속을 막았을 수도 있다 하여 집에서 다시 시도하였으나, 동일한 오류로 접속되지 않았다. 
+    오류를 해결하는 과정에서 .pem 키의 사용 권한을 모두 없애고, 현재 사용자 사용하도록 하였는데, 이 부분이 잘못된 것 같아 다시 .pem 키를 저장하였고, 그 후에야 제대로 접속할 수 있었다. 정확한 오류 원인을 확인하지 못한 것은 아쉬웠지만, 몇시간 만에 잘 되던 것이 안되는 경험을 하며 '내가 지금 뭘 하고 있는지를 잘 알고 있어야겠다!'라는 생각을 다시 한번 하게 되었다. 
+    icacls .\key.pem ; 해당 .pem 키 사용 권한을 가진 사용자를 보여줌.
+    $env:USERNAME ; 현재 사용자 이름 보여줌. (e.g.) ybigta)
+    icacls .\key.pem /grant:r "$($env:USERNAME):(R)" ; 현재 사용자에게 읽기 권한을 부여.
+    icacls .\key.pem /grant:r "ybigta:(R)" ; ybigta 사용자에게 key.pem 키 사용 권한 부여. 
