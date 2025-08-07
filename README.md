@@ -275,3 +275,18 @@ YBIGTA_newbie_team_project/review_analysis/eda/visualization에서 .py 확인 �
 
 ### docker hub 주소
 docker.io/rammma/my-fastapi-app
+
+## preprocess(사이트).png
+<img width="583" height="395" alt="preprocess(catchtable)" src="https://github.com/user-attachments/assets/8f2e01f7-9b68-402f-a288-19e8f68dd141" />
+<img width="625" height="431" alt="preprocess(googlemap)" src="https://github.com/user-attachments/assets/ebcd4d53-3541-44f4-9919-567bff3d069a" />
+<img width="725" height="499" alt="preprocess(kakaomap)" src="https://github.com/user-attachments/assets/840b2d91-28ab-4524-908d-a8e464c0e052" />
+
+## login.png
+<img width="828" height="778" alt="login" src="https://github.com/user-attachments/assets/0a37118f-3368-4418-8d42-8397bdac33b6" />
+
+## get_users.png
+
+## register.png
+<img width="793" height="844" alt="register" src="https://github.com/user-attachments/assets/77ede945-c2df-43e1-9fa7-6a8ff6a7ca62" />
+
+## get_processed.png
