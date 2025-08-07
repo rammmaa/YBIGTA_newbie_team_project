@@ -42,4 +42,4 @@ jobs:
             docker pull rammma/my-fastapi-app
             docker stop summer-25 || true
             docker rm summer-25 || true
-            docker run -d --name summer-25 -p 80:80 rammma/my-fastapi-app
+            docker run -d --name summer-25 -p 8000:80 rammma/my-fastapi-app
