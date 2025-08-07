@@ -291,6 +291,10 @@ docker.io/rammma/my-fastapi-app
 ### update_password.png
 ![1](aws/update-password.JPG)
 
+### mongoDB.png
+<img width="1078" height="279" alt="mongoDB" src="https://github.com/user-attachments/assets/1b9bef09-6495-424f-8b0e-a58a65d2b66a" />
+
+
 ## 1. RDS 보안 설정: 퍼블릭 액세스 차단 & VPC 내부 접속 허용
 
 * AWS RDS 인스턴스는 보안을 위해 퍼블릭 액세스를 허용하지 않고, VPC 내에서만 접속 가능하도록 설정하였다.
