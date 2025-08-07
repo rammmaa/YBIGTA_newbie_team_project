@@ -267,4 +267,5 @@ YBIGTA_newbie_team_project/review_analysis/eda/visualization에서 .py 확인 �
 ![이미지1](https://i.imgur.com/niDtCoG.jpg)
 ![이미지3](https://imgur.com/LsOR612.jpg)
 
+<img width="1156" height="389" alt="action" src="https://github.com/user-attachments/assets/e179ed07-8e02-48b2-a17c-38dd28a25642" />
 
