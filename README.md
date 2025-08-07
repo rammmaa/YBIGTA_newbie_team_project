@@ -284,12 +284,8 @@ docker.io/rammma/my-fastapi-app
 ### login.png
 <img width="828" height="778" alt="login" src="https://github.com/user-attachments/assets/0a37118f-3368-4418-8d42-8397bdac33b6" />
 
-### get_users.png
-
 ### register.png
 <img width="793" height="844" alt="register" src="https://github.com/user-attachments/assets/77ede945-c2df-43e1-9fa7-6a8ff6a7ca62" />
-
-### get_processed.png
 
 ### update_password.png
 <img width="547" height="588" alt="update_password" src="https://github.com/user-attachments/assets/f2335b7e-16b0-4b7e-b439-5a4ee645e9dc" />
