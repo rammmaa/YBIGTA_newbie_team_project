@@ -10,8 +10,8 @@ from st_app.utils.state import GraphState
 st_app_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 sys.path.append(st_app_path)
 
-from rag.retriever import get_retriever
-from rag.llm import get_rag_chain
+from st_app.rag.retriever import get_retriever
+from st_app.rag.llm import get_rag_chain
 
 # LLM 초기화
 chat_model = ChatUpstage(model="solar-pro2")
