@@ -23,8 +23,13 @@ def get_retriever():
             f"먼저 문서를 임베딩하여 인덱스 파일을 생성해야 합니다."
         )
 
-    # Upstage 임베딩 모델을 초기화합니다.
-    embeddings = UpstageEmbeddings()
+    # sentence-transformers 임베딩 모델을 초기화합니다.
+    from sentence_transformers import SentenceTransformer
+    from langchain_community.vectorstores import FAISS
+    from langchain_community.embeddings import HuggingFaceEmbeddings
+    
+    model_name = "all-MiniLM-L6-v2"
+    embeddings = HuggingFaceEmbeddings(model_name=model_name)
 
     # 저장된 FAISS 인덱스를 로드합니다.
     db = FAISS.load_local(
