@@ -91,7 +91,7 @@ def subject_info_node(state: GraphState) -> Dict[str, Any]:
     return {
         **state,
         "messages": state["messages"] + [ai_message],
-        "current_node": "chat",  # 다시 채팅 노드로 복귀
+        "current_node": "subject_info",
         "subject_info": subject_info,
-        "routing_decision": "return_to_chat"
+        "routing_decision": "end"
     }
