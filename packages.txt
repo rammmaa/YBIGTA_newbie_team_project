@@ -1,9 +1,9 @@
-# Streamlit Cloud 시스템 패키지
-# 필요한 시스템 라이브러리들을 여기에 추가합니다.
+# Streamlit Cloud system packages
+# Add necessary system libraries here
 
-# 기본 개발 도구
+# Basic development tools
 build-essential
 python3-dev
 
-# 기타 필요한 패키지들
-# (필요시 추가)
+# Other required packages
+# (add if needed)
