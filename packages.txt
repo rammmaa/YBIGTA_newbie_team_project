@@ -1,9 +1,2 @@
-# Streamlit Cloud system packages
-# Add necessary system libraries here
-
-# Basic development tools
 build-essential
 python3-dev
-
-# Other required packages
-# (add if needed)
