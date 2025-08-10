@@ -1,3 +1,8 @@
+from dotenv import load_dotenv
+
+# .env 파일 로드
+load_dotenv()
+
 import streamlit as st
 import os
 import sys
@@ -11,7 +16,7 @@ from langchain_core.messages import HumanMessage
 from st_app.graph.router import create_router_graph, create_initial_state
 import json
 
-# API 키 설정 (Streamlit Cloud secrets에서 가져오기)
+# # API 키 설정 (Streamlit Cloud secrets에서 가져오기)
 if "UPSTAGE_API_KEY" in st.secrets:
     os.environ["UPSTAGE_API_KEY"] = st.secrets["UPSTAGE_API_KEY"]
 elif "UPSTAGE_API_KEY" in os.environ:

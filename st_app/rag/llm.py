@@ -1,47 +1,65 @@
+# st_app/rag/llm.py
 import os
+from typing import Callable
+
 from langchain_upstage import ChatUpstage
-from langchain_core.runnables import RunnablePassthrough
+from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from langchain_core.output_parsers import StrOutputParser
-from .prompt import RAG_PROMPT
 
+from .prompt import RAG_PROMPT, CHAT_PROMPT, SUBJECT_INFO_PROMPT
+
+from dotenv import load_dotenv
+# .env 파일 로드
+load_dotenv()
+
+# 환경변수 (Streamlit Cloud에선 Secrets 권장)
 UPSTAGE_API_KEY = os.getenv("UPSTAGE_API_KEY")
+UPSTAGE_CHAT_MODEL = os.getenv("UPSTAGE_CHAT_MODEL", "solar-pro2")
 
-API_URL = "https://api.upstage.ai/v1"
+if not UPSTAGE_API_KEY:
+    raise ValueError("UPSTAGE_API_KEY가 설정되어 있지 않습니다. Secrets 또는 환경변수에 키를 넣어주세요.")
 
-chat = ChatUpstage(model="solar-pro2")
+# 공용 LLM 인스턴스 (원하면 get_chat_llm으로 새로 만들 수도 있음)
+chat = ChatUpstage(
+    model=UPSTAGE_CHAT_MODEL,
+    api_key=UPSTAGE_API_KEY,
+    temperature=0.3,
+    max_tokens=768,
+)
 
-def get_rag_chain(retriever):
+def get_chat_llm(temperature: float = 0.3, max_tokens: int = 768) -> ChatUpstage:
+    """일반 채팅/주제 노드에서 바로 쓰는 Upstage LLM 핸들러."""
+    return ChatUpstage(
+        model=UPSTAGE_CHAT_MODEL,
+        api_key=UPSTAGE_API_KEY,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+
+def make_retriever_adapter(retriever_obj) -> RunnableLambda:
+    """(question: str) -> context(str) 로 변환하는 어댑터."""
+    def _to_context(question: str) -> str:
+        hits = retriever_obj.retrieve(question)
+        return retriever_obj.format_context(hits)
+    return RunnableLambda(_to_context)
+
+def get_rag_chain(retriever_obj) -> Callable[[str], str]:
     """
-    RAG(Retrieval-Augmented Generation) 체인을 생성합니다.
-    이 체인은 retriever를 통해 문서를 검색하고, LLM을 통해 최종 답변을 생성합니다.
+    retriever + 프롬프트 + Upstage LLM을 묶은 RAG 실행 함수(question -> answer).
     """
-    rag_chain = (
-        # retriever는 질문에 맞는 문맥(context)을 찾아냅니다.
-        {"context": retriever, "question": RunnablePassthrough()}
-        # RAG_PROMPT를 사용하여 문맥과 질문을 결합한 프롬프트를 만듭니다.
+    retriever_adapter = make_retriever_adapter(retriever_obj)
+
+    chain = (
+        {
+            "retrieved_reviews": retriever_adapter,       # question -> context(str)
+            "user_message": RunnablePassthrough(),  # question 그대로
+        }
         | RAG_PROMPT
-        # 프롬프트를 LLM에 전달하여 답변을 생성합니다.
         | chat
-        # LLM의 출력을 문자열로 파싱합니다.
         | StrOutputParser()
     )
-    return rag_chain
 
-# def generate_response(prompt, max_tokens=512, temperature=0.7):
-#     headers = {
-#         "Authorization": f"Bearer {UPSTAGE_API_KEY}",
-#         "Content-Type": "application/json",
-#     }
-#     data = {
-#         "model": "solar-pro2", 
-#         "prompt": prompt,
-#         "max_tokens": max_tokens,
-#         "temperature": temperature
-#     }
+    def _run(question: str) -> str:
+        return chain.invoke(question)
 
-#     response = requests.post(API_URL, headers=headers, json=data)
-#     if response.status_code == 200:
-#         result = response.json()
-#         return result.get("text") or result.get("response") or "응답이 없습니다."
-#     else:
-#         raise Exception(f"Upstage API 에러: {response.status_code} - {response.text}")
+    return _run
