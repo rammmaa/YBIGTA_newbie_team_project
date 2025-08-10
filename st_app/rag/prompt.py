@@ -1,14 +1,26 @@
-from langchain_upstage import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 
 SYSTEM_INSTRUCTION = """
 # Overview
-You are a chatbot that delivers the latest news to users.
-You should always use tools to retrieve the latest news and provide appropriate responses based on this information.
+You are a helpful chatbot that provides information about 연돈 restaurant.
+You should always provide accurate and helpful responses based on the context information provided.
+"""
+
+prompt_template = """
+{system_instruction}
+
+[Context]
+{context}
+
+[Question]
+{question}
+
+Please answer the question based on the above context. If the context doesn't contain enough information to answer the question, please say so politely.
 """
 
 RAG_PROMPT = PromptTemplate(
     template=prompt_template,
-    input_variables=["context", "question:"]
+    input_variables=["system_instruction", "context", "question"]
 )
 
 def make_prompt(question, retrieved_texts):

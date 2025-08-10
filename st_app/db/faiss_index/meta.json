@@ -2,11 +2,9 @@
     "embedding_model": "all-MiniLM-L6-v2",
     "vector_dimension": 384,
     "index_type": "IndexFlatL2",
-    "total_vectors": 1411,
-    "created_at": "2025-08-10T01:04:48.538434",
+    "total_vectors": 10,
+    "created_at": "2025-08-10T14:44:40.261381",
     "source_files": [
-        "preprocessed_reviews_catchtable.csv",
-        "preprocessed_reviews_googlemap.csv",
-        "preprocessed_reviews_kakaomap.csv"
+        "preprocessed_reviews_sample.csv"
     ]
 }

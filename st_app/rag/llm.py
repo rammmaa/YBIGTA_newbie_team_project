@@ -2,7 +2,7 @@ import os
 from langchain_upstage import ChatUpstage
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
-from prompts import RAG_PROMPT
+from .prompt import RAG_PROMPT
 
 UPSTAGE_API_KEY = os.getenv("UPSTAGE_API_KEY")
 
