@@ -17,3 +17,4 @@ class GraphState(TypedDict):
     subject_info: Optional[dict]
     retrieved_reviews: Optional[List[str]]
     routing_decision: Optional[str]
+    

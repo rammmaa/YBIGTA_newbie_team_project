@@ -1,69 +1,76 @@
-import faiss
+import os
 import json
+import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
-import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # st_app 폴더 - 경로 2번 올라감. - 여기에 db 폴더가 있다
-PROJECT_ROOT = os.path.dirname(BASE_DIR)  # project_root 경로 # BASE_DIR에서 1번 올라감. - 여기에 database 폴더가 있다
+# 경로 설정
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+INDEX_DIR = os.path.join(BASE_DIR, "db", "faiss_index")
+INDEX_PATH = os.path.join(INDEX_DIR, "index.faiss")
+META_PATH = os.path.join(INDEX_DIR, "meta.json")
 
-index_dir = os.path.join(BASE_DIR, "db", "faiss_index")
-index_file = "index.faiss"
-index_path = os.path.join(index_dir, index_file)
+class ReviewRetriever:
+    def __init__(self, top_k: int = 3):
+        # 인덱스와 메타 파일 확인
+        if not os.path.exists(INDEX_PATH):
+            raise FileNotFoundError(f"FAISS 인덱스 없음: {INDEX_PATH}")
+        if not os.path.exists(META_PATH):
+            raise FileNotFoundError(f"meta.json 없음: {META_PATH}")
 
-def get_retriever():
-    """
-    FAISS 벡터 데이터베이스에서 retriever 객체를 로드하고 반환합니다.
-    이 객체는 사용자의 질문과 가장 유사한 문서를 검색하는 역할을 합니다.
-    """
-    # 인덱스 파일이 존재하는지 확인합니다.
-    if not os.path.exists(index_path):
-        raise FileNotFoundError(
-            f"FAISS 인덱스 파일이 없습니다: {index_path}\n"
-            f"먼저 문서를 임베딩하여 인덱스 파일을 생성해야 합니다."
-        )
+        # meta.json 로드
+        with open(META_PATH, "r", encoding="utf-8") as f:
+            meta = json.load(f)
 
-    # sentence-transformers 임베딩 모델을 초기화합니다.
-    from sentence_transformers import SentenceTransformer
-    from langchain_community.vectorstores import FAISS
-    from langchain_community.embeddings import HuggingFaceEmbeddings
-    
-    model_name = "all-MiniLM-L6-v2"
-    embeddings = HuggingFaceEmbeddings(model_name=model_name)
+        self.embed_model_name = meta.get("embedding_model", "all-MiniLM-L6-v2")
+        self.metric = meta.get("metric", "L2")
+        self.top_k = top_k
 
-    # 저장된 FAISS 인덱스를 로드합니다.
-    db = FAISS.load_local(
-        folder_path=index_dir,
-        embeddings=embeddings,
-        index_name="index",
-        # 인덱스 파일을 명시적으로 로드합니다.
-        allow_dangerous_deserialization=True  
-    )
+        # FAISS 인덱스 로드
+        self.index = faiss.read_index(INDEX_PATH)
 
-    # FAISS 데이터베이스에서 retriever 객체를 생성합니다.
-    # search_kwargs={"k": 3}는 질문과 가장 유사한 문서 3개를 검색하도록 설정합니다.
-    retriever = db.as_retriever(search_kwargs={"k": 3})
-    
-    return retriever
+        # docs.jsonl 로드
+        docs_path = meta.get("docs_path", os.path.join(INDEX_DIR, "docs.jsonl"))
+        if not os.path.exists(docs_path):
+            raise FileNotFoundError(f"docs.jsonl 없음: {docs_path}")
 
-# 1. 경로 설정
-# reviews_dir = os.path.join(PROJECT_ROOT, "database")  # CSV 파일 있는 폴더
-# save_dir = os.path.join(BASE_DIR, "db", "faiss_index")  # index.faiss 저장 폴더
-# index_path = os.path.join(save_dir, "index.faiss")
-# meta_path = os.path.join(save_dir, "meta.json")
+        with open(docs_path, "r", encoding="utf-8") as f:
+            self.docs = [json.loads(line) for line in f]
 
-# class Retriever:
-#     def __init__(self, index_path, meta_path, docs):
-#         self.index = faiss.read_index(index_path)
-#         with open(meta_path, 'r', encoding='utf-8') as f:
-#             self.meta = json.load(f)
-#         self.model = SentenceTransformer(self.meta['embedding_model'])
-#         self.docs = docs  # 원본 문서 리스트 (인덱스 번호와 매칭)
+        # 인덱스-문서 개수 검증
+        if self.index.ntotal != len(self.docs):
+            raise ValueError(f"인덱스({self.index.ntotal})와 문서({len(self.docs)}) 개수가 불일치")
 
-#     def search(self, query, top_k=5):
-#         q_emb = self.model.encode([query], convert_to_numpy=True).astype(np.float32)
-#         distances, indices = self.index.search(q_emb, top_k)
-#         results = []
-#         for idx in indices[0]:
-#             results.append(self.docs[idx])
-#         return results, distances[0]
+        # SentenceTransformer 임베딩 모델 로드
+        self.model = SentenceTransformer(self.embed_model_name)
+
+    def retrieve(self, query: str) -> list[dict]:
+        # 쿼리 임베딩
+        q_vec = self.model.encode([query], convert_to_numpy=True).astype(np.float32)
+
+        # 검색
+        D, I = self.index.search(q_vec, self.top_k)
+
+        # 결과 구성
+        hits = []
+        for idx, dist in zip(I[0], D[0]):
+            if idx == -1:
+                continue
+            doc = self.docs[idx]
+            hits.append({
+                "text": doc.get("content", ""),
+                "subject_id": doc.get("subject_id"),
+                "score": float(dist),
+                "meta": {k: v for k, v in doc.items() if k != "content"}
+            })
+        return hits
+
+    def format_context(self, hits: list[dict]) -> str:
+        """검색 결과를 RAG 프롬프트 컨텍스트로 변환"""
+        if not hits:
+            return "컨텍스트 없음"
+        lines = []
+        for h in hits:
+            tag = h.get("subject_id") or h["meta"].get("site_name") or "doc"
+            lines.append(f"- ({tag}) {h['text']}")
+        return "\n".join(lines)
