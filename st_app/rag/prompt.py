@@ -1,5 +1,4 @@
-# st_app/rag/prompt.py
-from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 
 # 리뷰 기반 RAG 프롬프트
 RAG_PROMPT = ChatPromptTemplate.from_template("""
