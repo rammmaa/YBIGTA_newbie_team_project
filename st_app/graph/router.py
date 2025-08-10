@@ -26,7 +26,7 @@ def create_router_graph():
     workflow.set_entry_point("chat")
     
     # 조건부 라우팅 함수
-    def route_decision(state: GraphState) -> Literal["chat", "subject_info", "rag_review", "__end__"]:
+    def route_decision(state: GraphState) -> Literal["subject_info", "rag_review", "__end__"]:
         """
         현재 상태를 기반으로 다음 노드를 결정합니다.
         
@@ -42,25 +42,23 @@ def create_router_graph():
             return "subject_info"
         elif routing_decision == "rag_review":
             return "rag_review"
-        elif routing_decision == "return_to_chat":
-            return "chat"
         else:
-            return "chat"
+            return "__end__"
     
     # 조건부 엣지 추가
     workflow.add_conditional_edges(
         "chat",
         route_decision,
         {
-            "chat": "chat",
             "subject_info": "subject_info", 
-            "rag_review": "rag_review"
+            "rag_review": "rag_review",
+            "__end__": END
         }
     )
     
-    # subject_info와 rag_review 노드에서 chat으로 복귀
-    workflow.add_edge("subject_info", "chat")
-    workflow.add_edge("rag_review", "chat")
+    # subject_info와 rag_review 노드에서 종료
+    workflow.add_edge("subject_info", END)
+    workflow.add_edge("rag_review", END)
     
     # 그래프 컴파일
     app = workflow.compile()
