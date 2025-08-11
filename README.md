@@ -385,5 +385,3 @@ class GraphState:
 - **Chat Node**: 기본 대화 처리 (Solar LLM)
 - **Subject Info Node**: 음식점 정보 제공 (JSON 기반)
 - **RAG Review Node**: FAISS 벡터 검색 + 리뷰 기반 답변
-
-~수고하셨습니다!!!!!~
