@@ -11,5 +11,5 @@
         "preprocessed_reviews_googlemap.csv",
         "preprocessed_reviews_kakaomap.csv"
     ],
-    "docs_path": "/Users/chojaegwan/Desktop/Ybigta/YBIGTA_newbie_team_project/st_app/db/faiss_index/docs.jsonl"
+    "docs_path": "docs.jsonl"
 }

@@ -31,6 +31,9 @@ class ReviewRetriever:
 
         # docs.jsonl 로드
         docs_path = meta.get("docs_path", os.path.join(INDEX_DIR, "docs.jsonl"))
+        # 상대 경로인 경우 INDEX_DIR을 기준으로 절대 경로 생성
+        if not os.path.isabs(docs_path):
+            docs_path = os.path.join(INDEX_DIR, docs_path)
         if not os.path.exists(docs_path):
             raise FileNotFoundError(f"docs.jsonl 없음: {docs_path}")
 
