@@ -342,5 +342,48 @@ EC2는 로드 밸런서가 사용하는 포트(예: 80, 443) 외에는 외부 �
   이러한 경험을 통해 .env 설정은 단순히 파일 하나를 작성하는 일이 아니라, 서버, 컨테이너, 네트워크, 보안 설정과 연동되어 복합적으로 작동하는 요소임을 몸소 느꼈다.
   그리고 배포 자동화 과정에서 환경변수를 안전하게 관리하고 주입하는 것은 보안과 안정성 측면에서 필수적인 작업이라는 것도 알게 되었다.
 
+---
 
+## 🚀 RAG Agent 과제 데모
 
+### 🌐 Streamlit Cloud 데모
+**🔗 데모 링크**: [연돈 챗봇](https://ybigtanewbieteamprojec4.streamlit.app/)
+
+### 📸 작동 화면
+![Streamlit 데모 화면](./demo_screenshot.png)
+
+### 🏗️ 시스템 아키텍처
+![시스템 파이프라인](./pipeline_diagram.png)
+
+---
+
+## 📋 과제 구현 상세
+
+### 🧠 State Class 구현 방식
+```python
+@dataclass
+class GraphState:
+    messages: List[BaseMessage]  # 대화 히스토리
+    current_node: str            # 현재 처리 중인 노드
+    subject_info: Optional[str]  # 음식점 정보
+    retrieved_reviews: Optional[List[str]]  # 검색된 리뷰들
+    routing_decision: Optional[str]  # 라우팅 결정 결과
+```
+
+### 🔄 조건부 라우팅 구현 방식
+**AI 기반 의도 분류**를 사용하여 규칙 기반이 아닌 유연한 라우팅을 구현함.
+
+1. **의도 분류**: Solar LLM이 사용자 메시지를 분석하여 3가지 의도로 분류
+   - `chat`: 일반 대화/스몰토크
+   - `subject_info`: 음식점 정보 질의 (위치, 영업시간, 메뉴 등)
+   - `rag_review`: 리뷰 기반 답변 필요
+
+2. **조건부 라우팅**: LangGraph의 `add_conditional_edges`를 사용하여 동적 분기
+3. **자동 복귀**: 각 노드 처리 후 자동으로 Chat Node로 복귀
+
+### 구현된 노드
+- **Chat Node**: 기본 대화 처리 (Solar LLM)
+- **Subject Info Node**: 음식점 정보 제공 (JSON 기반)
+- **RAG Review Node**: FAISS 벡터 검색 + 리뷰 기반 답변
+
+~수고하셨습니다!!!!!~
