@@ -48,7 +48,7 @@ def rag_review_node(state: GraphState) -> Dict[str, Any]:
         # 폴백: CHAT_PROMPT로 상황 안내
         retrieved_reviews = []
         msgs = CHAT_PROMPT.format_messages(
-            user_input=f"리뷰 컨텍스트를 불러오지 못했어요. 질문: {user_message}\n"
+            user_message=f"리뷰 컨텍스트를 불러오지 못했어요. 질문: {user_message}\n"
                        f"가능한 범위에서 간단히 도와줘. (오류: {e})"
         )
         resp = chat_model.invoke(msgs)
